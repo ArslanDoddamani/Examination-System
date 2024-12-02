@@ -14,7 +14,7 @@ const StudentSchema = new mongoose.Schema(
       },
       department:{
         type: String,
-        required: [true, "Department is required"],
+        required: [true, "Department is required"]
       },
      sem: {
        type: Number,
@@ -28,7 +28,7 @@ const StudentSchema = new mongoose.Schema(
        password: {
          type: String,
          required: [true, "password is required"],
-         minlength: [8,'Password must contain atleast 8 characters'],
+         minlength: [8,'Password must contain atleast 8 characters']
        },
        {timestamps: true}
 
