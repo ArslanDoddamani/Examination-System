@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const StudentSchema = new mongoose.Schema(
    {
@@ -32,6 +32,6 @@ const StudentSchema = new mongoose.Schema(
        },
        {timestamps: true}
 
-  )
+  );
 
-export const Student = mongoose.model("Student_Details", StudentSchema)
+export const Student = mongoose.model("Student_Details", StudentSchema);
