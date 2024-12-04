@@ -27,6 +27,7 @@ const Result = () => {
   ];
 
   const gradingSystem = [
+    { grade: "Grade", range: "Range" },
     { grade: "O", range: "90-100" },
     { grade: "A+", range: "80-89" },
     { grade: "A", range: "70-79" },
@@ -41,97 +42,157 @@ const Result = () => {
   ];
 
   const handleDownloadPDF = () => {
-    const resultDiv = document.getElementById("result-section");
-    html2canvas(resultDiv, { scale: 2 }).then((canvas) => {
+    // Clone the "result-section" for PDF generation
+    const resultSection = document.getElementById("result-section");
+    const clonedSection = resultSection.cloneNode(true);
+  
+    // Apply desktop styles to the cloned section
+    clonedSection.style.width = "800px"; // Fixed width for desktop view
+    clonedSection.style.margin = "0 auto"; // Center the content
+    clonedSection.style.fontSize = "12px"; // Adjust font size for PDF readability
+  
+    // Create a wrapper for rendering
+    const wrapper = document.createElement("div");
+    wrapper.appendChild(clonedSection);
+    wrapper.style.display = "block";
+  
+    document.body.appendChild(wrapper); // Append to the document body for rendering
+  
+    html2canvas(clonedSection, {
+      scale: 2, // High resolution for better PDF quality
+      useCORS: true, // Enable cross-origin images
+    }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 190; // PDF width - margins
+      const imgWidth = 190; // PDF width minus margins
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+  
       pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
       pdf.save(`${studentInfo.name}_Result.pdf`);
+  
+      document.body.removeChild(wrapper); // Clean up
     });
   };
 
   return (
-    <div className="p-8 bg-gray-800 text-white font-sans">
-      <div id="result-section" className="bg-white text-black shadow-md rounded-md p-6">
-        {/* Header Section */}
-        <div className="mb-6 text-center">
-          <img src={Beclogo} alt="College Logo" className="mx-auto mb-4" style={{ width: "80px" }} />
-          <p className="text-lg font-bold">Basaveshwar Engineering College, Bagalkote-587102</p>
-          <p>(An autonomous institution permanently affiliated to VTU, Belagavi)</p>
-          <p className="text-lg font-bold">Academic Year 2022-2023 Even Semester</p>
-          <p className="text-lg font-bold">B.E. Provisional Results, September/October-2023</p>
-        </div>
+    <>
+      <div className="p-8 bg-gray-800 text-white flex flex-col items-center">
+        <div id="result-section" className="bg-white text-black shadow-md w-full max-w-5xl rounded-md p-6">
+          {/* Header Section */}
+          <div className="mb-6 text-center flex justify-center items-center gap-2">
+            <img src={Beclogo} alt="College Logo" className="" style={{ width: "70px" }} />
+            <div>
+              <h1 className="text-lg font-bold">B.V.V.S</h1>
+              <p className="text-lg font-bold">Basaveshwar Engineering College, Bagalkote-587102</p>
+              <p>(An autonomous institution permanently affiliated to VTU, Belagavi)</p>
+              <p className="text-lg font-bold">Academic Year 2022-2023 Even Semester</p>
+              <p className="text-lg font-bold">B.E. Provisional Results, September/October-2023</p>
+            </div>
+          </div>
+          <hr className="border-black mb-10" />
 
-        {/* Student Information */}
-        <div className="mb-6 px-20">
-          <p><strong>USN:</strong> {studentInfo.usn}</p>
-          <p><strong>NAME OF THE STUDENT:</strong> {studentInfo.name}</p>
-          <p><strong>BRANCH:</strong> {studentInfo.branch}</p>
-          <p><strong>SEMESTER:</strong> {studentInfo.semester}</p>
-        </div>
-
-        {/* Subjects Table */}
-        <table className="w-full text-sm text-center border border-collapse border-gray-700 mb-6">
-          <thead>
-            <tr className="border-b bg-gray-200">
-              <th className="border px-4 py-2">Sl No</th>
-              <th className="border px-4 py-2">Subject Code</th>
-              <th className="border px-4 py-2">Subject Name</th>
-              <th className="border px-4 py-2">Grade</th>
-              <th className="border px-4 py-2">Attempt</th>
-            </tr>
-          </thead>
-          <tbody>
-            {subjects.map((subject, index) => (
-              <tr key={index} className="border-b">
-                <td className="border px-4 py-2">{subject.slNo}</td>
-                <td className="border px-4 py-2">{subject.code}</td>
-                <td className="border px-4 py-2">{subject.name}</td>
-                <td className="border px-4 py-2">{subject.grade}</td>
-                <td className="border px-4 py-2">{subject.attempt}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* SGPA and CGPA */}
-        <div className="mt-6">
-          <p><strong>SGPA:</strong> {studentInfo.sgpa}</p>
-          <p><strong>CGPA:</strong> {studentInfo.cgpa}</p>
-        </div>
-
-        {/* Grading System Table */}
-        <div className="mt-8">
-          <p className="text-lg font-bold mb-4">Grading System</p>
-          <table className="w-full text-sm text-center border border-collapse border-gray-700">
-            <thead>
-              <tr className="border-b bg-gray-200">
-                <th className="border px-4 py-2">Grade</th>
-                <th className="border px-4 py-2">Range</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gradingSystem.map((grade, index) => (
-                <tr key={index} className="border-b">
-                  <td className="border px-4 py-2">{grade.grade}</td>
-                  <td className="border px-4 py-2">{grade.range}</td>
+          {/* Student Information */}
+          <div className="mb-6">
+            <table>
+              <tbody>
+                <tr>
+                  <th className="text-left">USN</th>
+                  <td>: {studentInfo.usn}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                <tr>
+                  <th className="pr-5 text-left">NAME OF THE STUDENT</th>
+                  <td>: {studentInfo.name}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">BRANCH</th>
+                  <td>: {studentInfo.branch}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">SEMESTER</th>
+                  <td>: {studentInfo.semester}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-      <button
-        onClick={handleDownloadPDF}
-        className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Download PDF
-      </button>
-    </div>
+          {/* Subjects Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-center border border-collapse border-gray-700 mb-6">
+              <thead>
+                <tr className="border-b bg-gray-200">
+                  <th className="border px-4 py-2">Sl No</th>
+                  <th className="border px-4 py-2">Subject Code</th>
+                  <th className="border px-4 py-2">Subject Name</th>
+                  <th className="border px-4 py-2">Grade</th>
+                  <th className="border px-4 py-2">Attempt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {subjects.map((subject, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="border px-4 py-2">{subject.slNo}</td>
+                    <td className="border px-4 py-2">{subject.code}</td>
+                    <td className="border px-4 py-2">{subject.name}</td>
+                    <td className="border px-4 py-2">{subject.grade}</td>
+                    <td className="border px-4 py-2">{subject.attempt}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* SGPA and CGPA */}
+          <div className="mt-6">
+            <p>
+              <strong>SGPA:</strong> {studentInfo.sgpa}
+            </p>
+            <p>
+              <strong>CGPA:</strong> {studentInfo.cgpa}
+            </p>
+          </div>
+
+          {/* Grading System Table */}
+          <div className="overflow-x-auto mt-8">
+            <p className="text-lg font-bold mb-4">Grading System</p>
+            <table className="w-full text-sm text-center border border-collapse border-black">
+              <tbody>
+                <tr>
+                  {gradingSystem.map((grade, index) => (
+                    <td
+                      key={index}
+                      className={`border border-black px-4 py-2 ${
+                        index === 0 ? "font-bold bg-gray-200" : ""
+                      }`}
+                    >
+                      {grade.grade}
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  {gradingSystem.map((grade, index) => (
+                    <td
+                      key={index}
+                      className={`border border-black px-4 py-2 ${
+                        index === 0 ? "font-bold bg-gray-200" : ""
+                      }`}
+                    >
+                      {grade.range}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <button
+          onClick={handleDownloadPDF}
+          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Download PDF
+        </button>
+      </div>
+    </>
   );
 };
 
