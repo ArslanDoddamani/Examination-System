@@ -4,10 +4,9 @@ const StudentSchema = new mongoose.Schema(
   {
     usn: {
       type: String,
-      required: [true, 'USN is required'],
       unique: true,
     },
-    name: {
+    fullName: {
       type: String,
       required: [true, 'Name is required'],
       unique: true,
@@ -23,13 +22,13 @@ const StudentSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, 'email is required'],
+      required: [true, 'Email is required'],
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: [true, 'password is required'],
+      required: [true, 'Password is required'],
       min: [8, 'Password must contain atleast 8 characters'],
     },
     phone: {
@@ -43,4 +42,17 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Student_Details = mongoose.model('Student_Details', StudentSchema);
+StudentSchema.pre("save", async function (next) {
+  if(!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10)
+  next()
+})
+
+StudentSchema.methods.isPasswordCorrect = async function(password){
+  return await bcrypt.compare(password, this.password)
+}
+
+const Student = mongoose.model('Student', StudentSchema);
+
+export default Student;
