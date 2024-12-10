@@ -30,4 +30,4 @@ import studentRouter from './routes/student.routes.js'
 app.use("/api/student", studentRouter)
 
 
-export default app;
+export default app; 
