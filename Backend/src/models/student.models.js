@@ -1,41 +1,47 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-const StudentSchema = new mongoose.Schema(
+const studentSchema = new mongoose.Schema(
   {
     usn: {
       type: String,
       unique: true,
+      sparse: true,
     },
+
     fullName: {
       type: String,
-      required: [true, 'Name is required'],
-      unique: true,
+      required: [true, "Name is required"],
     },
+
     department: {
       type: String,
-      required: [true, 'Department is required'],
+      required: [true, "Department is required"],
     },
+
     sem: {
       type: Number,
       min: 1,
       max: 8,
     },
+
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, "Email is required"],
       unique: true,
       lowercase: true,
     },
+
     password: {
       type: String,
-      required: [true, 'Password is required'],
-      min: [8, 'Password must contain atleast 8 characters'],
+      required: [true, "Password is required"],
+      min: [8, "Password must contain atleast 8 characters"],
     },
+
     phone: {
       type: String,
-      required: [true, 'Phone number is required'],
-      unique: true,
+      required: [true, "Phone number is required"],
       minlength: 10,
       maxlength: 10,
     },
@@ -43,17 +49,32 @@ const StudentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-StudentSchema.pre("save", async function (next) {
-  if(!this.isModified("password")) return next();
+studentSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password, 10)
-  next()
-})
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
-StudentSchema.methods.isPasswordCorrect = async function(password){
-  return await bcrypt.compare(password, this.password)
-}
+studentSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
-const Student = mongoose.model('Student', StudentSchema);
+studentSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      usn: this.usn,
+      fullName: this.fullName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
+};
+
+const Student = mongoose.model("Student", studentSchema);
 
 export default Student;

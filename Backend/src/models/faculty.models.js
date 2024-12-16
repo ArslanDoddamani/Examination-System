@@ -1,29 +1,29 @@
 import mongoose from 'mongoose';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-const FacultySchema = new mongoose.Schema(
+const facultySchema = new mongoose.Schema(
   {
-    name: {
+    facultyName: {
       type: String,
       required: [true, 'Name is required'],
-      unique: true,
     },
-    department: {
+    facultyDept: {
       type: String,
       required: [true, 'Department is required'],
     },
-
-    email: {
+    facultyEmail: {
       type: String,
       required: [true, 'email is required'],
       unique: true,
       lowercase: true,
     },
-    password: {
+    facultyPassword: {
       type: String,
       required: [true, 'password is required'],
       min: [8, 'Password must contain atleast 8 characters'],
     },
-    phone: {
+    facultyPhone: {
       type: String,
       required: [true, 'Phone number is required'],
       unique: true,
@@ -34,4 +34,32 @@ const FacultySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Faculty_Details = mongoose.model('Faculty_Details', FacultySchema);
+facultySchema.pre("save", async function (next) {
+  if (!this.isModified("facultyPassword")) return next();
+
+  this.facultyPassword = await bcrypt.hash(this.facultyPassword, 10);
+  next();
+});
+
+facultySchema.methods.isPasswordCorrect = async function (facultyPassword) {
+  return await bcrypt.compare(facultyPassword, this.facultyPassword);
+};
+
+facultySchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      facultyEmail: this.facultyEmail,
+      facultyDept: this.facultyDept,
+      facultyName: this.facultyName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
+};
+
+const Faculty = mongoose.model('Faculty', facultySchema);
+
+export default Faculty;

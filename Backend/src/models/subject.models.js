@@ -1,45 +1,43 @@
-import mongoose from 'mongoose';
-const SubjectSchema = new mongoose.Schema(
+import mongoose from "mongoose";
+
+const subjectSchema = new mongoose.Schema(
   {
-    code: {
+    subCode: {
       type: String,
-      required: [true, 'Subject code is required'],
-      uppercase: true,
+      required: [true, "Subject code is required"],
       unique: true,
-      minlength: 9,
-      maxlength: 9,
     },
-    sub_name: {
+
+    subName: {
       type: String,
-      required: [true, 'Subject name is required'],
+      required: [true, "Subject name is required"],
     },
-    semester: {
+
+    subSem: {
       type: Number,
-      required: [true, 'Semester is required'],
-      min: [1, 'Semester should be a value between 1 and 8'],
-      max: [8, 'Semester should be a value between 1 and 8'],
+      required: [true, "Semester is required"],
+      min: [1, "Semester should be a value between 1 and 8"],
+      max: [8, "Semester should be a value between 1 and 8"],
     },
-    Dept: {
+
+    subDept: {
       type: String,
-      required: [true, 'Department name is required'],
-      uppercase: true,
-      minlength: 3,
-      maxlength: 3,
+      required: [true, "Department name is required"],
     },
-    faculty: {
-      type: String,
-      required: [true, 'Faculty name is required'],
-    },
+
     credits: {
       type: Number,
-      required: [true, 'Number of credits is required'],
+      required: [true, "Number of credits is required"],
     },
-    sub_type: {
+
+    subType: {
       type: String,
-      required: [true, 'Subject type is required'],
+      required: [true, "Subject type is required"],
     },
   },
   { timestamps: true }
 );
 
-export const Subject_Details = mongoose.model('Subject_Details', SubjectSchema);
+const Subject = mongoose.model("Subject", subjectSchema);
+
+export default Subject;

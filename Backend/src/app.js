@@ -32,8 +32,11 @@ if (!process.env.CORS_ORIGIN) {
 // routes import
 
 import studentRouter from './routes/student.routes.js'
+import facultyRouter from './routes/faculty.routes.js';
+import adminRouter from './routes/admin.routes.js';
 
 app.use("/api/student", studentRouter)
-
+app.use("/api/faculty", facultyRouter)
+app.use("/api/admin", adminRouter)
 
 export default app;
