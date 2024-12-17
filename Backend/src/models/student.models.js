@@ -45,6 +45,29 @@ const studentSchema = new mongoose.Schema(
       minlength: 10,
       maxlength: 10,
     },
+
+    cgpa: {
+      type: Number,
+      default: 0.0,
+      min: 0,
+    },
+
+    sgpa: {
+      type: [Number],
+      default: [0.0],
+      validate: {
+        validator: function(v) {
+          return v.length <= 8;
+        },
+        message: props => `${props.value} exceeds the maximum number of semesters!`
+      }
+    },
+
+    dob: {
+      type: String,
+      required: [true, "Date of birth is required"],
+    },
+
   },
   { timestamps: true }
 );

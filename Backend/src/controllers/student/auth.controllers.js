@@ -4,10 +4,10 @@ import Student from "../../models/student.models.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
 export const registerStudent = asyncHandler(async (req, res) => {
-  const { fullName, department, sem, email, password, phone } = req.body;
+  const { fullName, department, sem, email, password, phone, dob } = req.body;
 
   if (
-    [fullName, department, email, password, phone].some(
+    [fullName, department, email, password, phone, dob].some(
       (field) => field?.trim() === ""
     )
   ) {
@@ -27,6 +27,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     email,
     password,
     phone,
+    dob
   });
 
   const createdStudent = await Student.findById(student._id).select(

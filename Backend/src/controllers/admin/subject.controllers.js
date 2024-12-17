@@ -6,8 +6,6 @@ import asyncHandler from "../../utils/asyncHandler.js"
 export const addSubject = asyncHandler( async(req, res) => {
     const { subCode, subName, subSem, subDept, credits, subType } = req.body;
 
-    console.log(subCode+" "+subName);
-
     if(
         [ subCode, subName, subDept, credits, subType ].some((field) => 
          field?.trim() === "")

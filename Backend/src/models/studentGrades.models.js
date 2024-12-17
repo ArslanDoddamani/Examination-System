@@ -1,31 +1,28 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const StudentGradesSchema = new mongoose.Schema(
+const studentGradesSchema = new mongoose.Schema(
   {
     usn: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Student_Details',
+      ref: "Student_Details",
       required: true,
     },
-    sub_code: {
+    subCode: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Subject_Details',
+      ref: "Subject",
     },
     semester: {
       type: Number,
-      required: true,
       min: 1,
       max: 8,
     },
     grade: {
       type: String,
-      required: true,
       minlength: 1,
-      maxlength: 1,
+      maxlength: 2,
     },
     attempts: {
       type: Number,
-      required: true,
       min: 1,
     },
   },
@@ -34,7 +31,7 @@ const StudentGradesSchema = new mongoose.Schema(
   }
 );
 
-export const Student_Grades = mongoose.model(
-  'Student_Grades',
-  StudentGradesSchema
+export const StudentGrades = mongoose.model(
+  "StudentGrades",
+  studentGradesSchema
 );
