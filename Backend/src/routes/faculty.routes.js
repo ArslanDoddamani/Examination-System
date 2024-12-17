@@ -1,7 +1,6 @@
 import { Router } from "express";
-import registerFaculty from "../controllers/faculty/register.controllers.js";
-import loginFaculty from "../controllers/faculty/login.controllers.js";
-import logoutFaculty from "../controllers/faculty/logout.controllets.js";
+import { loginFaculty, logoutFaculty, registerFaculty } from "../controllers/faculty/auth.controllers.js";
+
 
 
 const facultyRouter = Router();

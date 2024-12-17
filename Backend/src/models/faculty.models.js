@@ -26,7 +26,6 @@ const facultySchema = new mongoose.Schema(
     facultyPhone: {
       type: String,
       required: [true, 'Phone number is required'],
-      unique: true,
       minlength: 10,
       maxlength: 10,
     },
