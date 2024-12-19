@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
-  loginStudent,
-  logoutStudent,
-  registerStudent,
+    loginStudent,
+    logoutStudent,
+    registerStudent,
 } from "../controllers/student/auth.controllers.js";
 import { studentProfile } from "../controllers/student/student.controllers.js";
 import { verifyStudent } from "../middlewares/auth.middlewares.js";

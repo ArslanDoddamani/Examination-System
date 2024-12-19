@@ -109,6 +109,34 @@ export const loginStudent = asyncHandler(async (req, res) => {
       )
     );
 });
+/*const getStudentsOrderedByUSN = asyncHandler(async (req, res) => {
+  console.log(req.body)
+  const students = await Student.aggregate([
+    {
+      $addFields: {
+        lastThreeUSN: {
+          $cond: {
+            if: {
+              $and: [
+                { $ne: [{ $type: "$usn" }, "missing"] },  
+                { $gte: [{ $strLenCP: { $ifNull: ["$usn", ""] } }, 3] }  
+              ]
+            },
+            then: { $substrBytes: ["$usn", -3, 3] },  
+            else: "$usn" 
+          }
+        }
+      }
+    },
+    { $sort: { lastThreeUSN: -1 } } 
+  ]);
+
+  if (!students.length) {
+    throw new ApiError(404, "No students found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, students, "Students sorted successfully by last three characters of USN"));
+});*/
 
 export const logoutStudent = asyncHandler(async ( _, res) => {
   const options = {
@@ -121,3 +149,4 @@ export const logoutStudent = asyncHandler(async ( _, res) => {
     .clearCookie("accessToken", options)
     .json(new ApiResponse(200, {}, "Student logged Out"));
 });
+
