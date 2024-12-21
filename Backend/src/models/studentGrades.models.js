@@ -4,7 +4,7 @@ const studentGradesSchema = new mongoose.Schema(
   {
     usn: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Student_Details",
+      ref: "Student",
       required: true,
     },
     subCode: {
