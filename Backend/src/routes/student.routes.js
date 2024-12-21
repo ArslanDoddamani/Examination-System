@@ -12,7 +12,7 @@ import { regularSubjectPayment } from "../controllers/student/payment.controller
 const studentRouter = Router();
 
 studentRouter.route("/register").post(registerStudent);
-studentRouter.route("/login").get(loginStudent);
+studentRouter.route("/login").post(loginStudent);
 studentRouter.route("/logout").get(logoutStudent);
 studentRouter.route("/profile").get(verifyStudent, studentProfile);
 studentRouter.route("/registration/regular").get(verifyStudent, subjectRegister);

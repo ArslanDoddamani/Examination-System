@@ -4,7 +4,7 @@ import Student from "../../models/student.models.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
 export const registerStudent = asyncHandler(async (req, res) => {
-  const { fullName, department, sem, email, password, phone, dob } = req.body;
+  const { fullName, department, email, password, phone, dob } = req.body;
 
   if (
     [fullName, department, email, password, phone, dob].some(
@@ -23,7 +23,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
   const student = await Student.create({
     fullName,
     department,
-    sem,
+    sem: 1,
     email,
     password,
     phone,
@@ -59,23 +59,18 @@ const generateAccessTokens = async (studentId) => {
 };
 
 export const loginStudent = asyncHandler(async (req, res) => {
-  const { usn, email, password } = req.body;
+  
+  const { usn, password } = req.body;
+  
 
-  if (
-    !((usn && usn.trim() !== "") || (email && email.trim() !== "")) ||
-    password.trim() === ""
-  ) {
+  if (!usn || usn.trim() === "" || password.trim() === "") {
     throw new ApiError(400, "All fields are required");
   }
 
-  const query = {};
-  if (usn) query.usn = usn;
-  if (email) query.email = email;
-
-  const student = await Student.findOne(query);
+  const student = await Student.findOne({ usn });
 
   if (!student) {
-    throw new ApiError(404, "Invalid email or usn");
+    throw new ApiError(404, "Invalid usn");
   }
 
   const isPasswordValid = await student.isPasswordCorrect(password);
@@ -92,7 +87,8 @@ export const loginStudent = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: false, // Set to true if using HTTPS in production
+    sameSite: "lax", // Allows cookies in cross-origin requests with credentials
   };
 
   return res
@@ -104,11 +100,14 @@ export const loginStudent = asyncHandler(async (req, res) => {
         {
           student: loggedInStudent,
           accessToken,
+          userType: "student",
         },
         "Student logged In Successfully"
       )
     );
 });
+
+
 /*const getStudentsOrderedByUSN = asyncHandler(async (req, res) => {
   console.log(req.body)
   const students = await Student.aggregate([
@@ -141,7 +140,8 @@ export const loginStudent = asyncHandler(async (req, res) => {
 export const logoutStudent = asyncHandler(async ( _, res) => {
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: false, // Set to true if using HTTPS in production
+    sameSite: "lax", // Allows cookies in cross-origin requests with credentials
   };
 
   return res
