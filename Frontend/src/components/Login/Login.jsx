@@ -1,15 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "../../axios/axios.js";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [isRegistering, setIsRegistering] = React.useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [usn, setUsn] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [department, setDepartment] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dob, setDOB] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    
+    try {
+      if (!usn || !password) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const res = await axios.post("/student/login", { usn, password });
+      
+        window.localStorage.setItem("userType", res.data.data?.userType);
+        navigate("/student/profile"); 
+    } catch (error) {
+      console.error(error.response?.data?.message || error.message);
+      alert("Login failed. Please try again.");
+    }
   };
+  
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("/student/register", {
+        fullName,
+        department,
+        email,
+        password,
+        phone,
+        dob,
+      });
+      setIsRegistering(false);
+      console.log(res.data.message || "Registration successful!");
+    } catch (error) {
+      console.error(error.response?.data?.message || error.message);
+    }
+  };
+  
 
   return (
     <>
@@ -31,6 +73,7 @@ const Login = () => {
                 name="name"
                 id="name"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={(e) => setFullName(e.target.value)}
               />
             </div>
             <div>
@@ -45,6 +88,7 @@ const Login = () => {
                 name="email"
                 id="email"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -59,6 +103,7 @@ const Login = () => {
                 name="phone"
                 id="phone"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setPhone(e.target.value)}
               />
             </div>
             <div>
@@ -73,9 +118,25 @@ const Login = () => {
                 name="dob"
                 id="dob"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setDOB(e.target.value)}
               />
             </div>
-            <div className="md:col-span-2">
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-md font-medium text-gray-300"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="">
               <label
                 htmlFor="dept"
                 className="block text-md font-medium text-gray-300"
@@ -86,6 +147,7 @@ const Login = () => {
                 name="dept"
                 id="dept"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setDepartment(e.target.value)}
               >
                 <option value="">Select Department</option>
                 <option value="Computer Science and Engineering">Computer Science and Engineering</option>
@@ -114,7 +176,7 @@ const Login = () => {
             </div>
           </form>
         ) : (
-          <form className="space-y-4 w-full max-w-sm" onSubmit={handleSubmit}>
+          <form className="space-y-4 w-full max-w-sm" onSubmit={handleLogin}>
             <div>
               <label
                 htmlFor="usn"
@@ -127,6 +189,7 @@ const Login = () => {
                 name="usn"
                 id="usn"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setUsn(e.target.value)}
               />
             </div>
             <div>
@@ -141,6 +204,7 @@ const Login = () => {
                 name="password"
                 id="password"
                 className="mt-1 block w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
             <div>

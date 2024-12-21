@@ -5,8 +5,6 @@ import SiteRoutes from './Router/SiteRoutes'
 const App = () => {
   return (
     <>
-      <Navbar />
-      <hr />
       <SiteRoutes/>
     </>
   )

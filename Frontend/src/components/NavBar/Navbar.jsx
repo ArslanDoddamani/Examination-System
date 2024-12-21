@@ -16,8 +16,8 @@ const Navbar = () => {
 
   const getTitle = () => {
     switch (location.pathname) {
-      case '/':
-        return 'Login';
+      case '':
+        return 'Profile';
       case '/semester-details':
         return 'SemesterDetails';
       case '/result':
@@ -26,12 +26,19 @@ const Navbar = () => {
         return 'Payment History';
       case '/registration':
         return 'Sub Registration';
-      case '/profile':
-        return 'Profile';
       default:
         return 'Login';
     }
   };
+
+  const menuItems = [
+    { path: '', label: 'Profile' },
+    { path: '/semester-details', label: 'SemesterDetails' },
+    { path: '/result', label: 'Result' },
+    { path: '/payment-history', label: 'Payment history' },
+    { path: '/registration', label: 'SubRegistration' },
+    { path: '/logout', label: 'Logout' },
+  ];
 
   return (
     <div className='w-full  p-2 py-5'>
@@ -53,23 +60,30 @@ const Navbar = () => {
                 <>
                     <hr />
                     <div className='flex flex-col justify-end items-start px-4 w-full bg-black'>
-                        <Link to='/profile' className={`text-white text-sm ${selectedMenu === '/profile' ? 'hidden' : ''}`} onClick={() => handleMenuClick('/')}>Profile</Link>
-                        <Link to='/semester-details' className={`text-white text-sm ${selectedMenu === '/semesterdetails' ? 'hidden' : ''}`} onClick={() => handleMenuClick('/SemesterDetails')}>SemesterDetails</Link>
-                        <Link to='/result' className={`text-white text-sm ${selectedMenu === '/result' ? 'hidden' : ''}`} onClick={() => handleMenuClick('/result')}>Result</Link>
-                        <Link to='/payment-history' className={`text-white text-sm ${selectedMenu === '/payment-history' ? 'hidden' : ''}`} onClick={() => handleMenuClick('/payment-history')}>Payment history</Link>
-                        <Link to='/registration' className={`text-white text-sm ${selectedMenu === '/registration' ? 'hidden' : ''}`} onClick={() => handleMenuClick('/registration')}>SubRegistration</Link>
-                        <Link to='/' className={`text-white text-sm ${selectedMenu === '/' ? 'hidden' : ''}`} onClick={() => handleMenuClick('/login')}>Login</Link>
+                        {menuItems.map(({ path, label }) => (
+                            <Link 
+                                key={path} 
+                                to={path} 
+                                className={`text-white text-sm ${selectedMenu === path ? 'hidden' : ''}`} 
+                                onClick={() => handleMenuClick(path)}
+                            >
+                                {label}
+                            </Link>
+                        ))}
                     </div>
                 </>
             )}
         <div className='hidden sm:block w-full mt-4'>
             <nav className='flex justify-between items-center px-8 md:px-16 lg:px-24 xl:px-32'>
-                <Link to='/profile' className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>Profile</Link>
-                <Link to='/semester-details' className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>SemesterDetails</Link>
-                <Link to='/result' className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>Result</Link>
-                <Link to='/payment-history' className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>Payment history </Link>
-                <Link to='/registration' className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>SubRegistration </Link>
-                <Link to='/' className='text-white text-sm md:text-base lg:text-lg xl:text-xl'>Login</Link>
+                {menuItems.map(({ path, label }) => (
+                    <Link 
+                        key={path} 
+                        to={path} 
+                        className='text-white text-sm md:text-base lg:text-lg xl:text-xl'
+                    >
+                        {label}
+                    </Link>
+                ))}
             </nav>
         </div>
     </div>
